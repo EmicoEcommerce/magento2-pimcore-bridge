@@ -9,8 +9,6 @@
 namespace Divante\PimcoreIntegration\Model\Catalog\Product\Attribute\Creator\Strategy;
 
 use Magento\Catalog\Model\Product;
-use Magento\Eav\Setup\EavSetup;
-
 /**
  * Class TextStrategy
  */
@@ -23,10 +21,13 @@ class TextStrategy extends AbstractStrategy
     {
         /** @var EavSetup $eavSetup */
         $eavSetup = $this->eavSetupFactory->create();
+
+        $attributeConfiguration = $this->getAttributeConfiguration($eavSetup);
+
         $eavSetup->addAttribute(
             Product::ENTITY,
             $this->code,
-            array_merge(self::$defaultAttrConfig, [
+            array_merge($attributeConfiguration, [
                 'type'  => 'varchar',
                 'label' => $this->attrData['label'],
                 'input' => 'text',

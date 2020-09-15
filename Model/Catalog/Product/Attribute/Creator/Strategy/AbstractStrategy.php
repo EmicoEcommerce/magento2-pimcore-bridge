@@ -9,8 +9,11 @@
 namespace Divante\PimcoreIntegration\Model\Catalog\Product\Attribute\Creator\Strategy;
 
 use Magento\Eav\Api\AttributeRepositoryInterface;
+use Magento\Catalog\Setup\CategorySetup;
 use Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface;
+use Magento\Eav\Setup\EavSetup;
 use Magento\Eav\Setup\EavSetupFactory;
+
 
 /**
  * Class AbstractStrategy
@@ -76,5 +79,51 @@ abstract class  AbstractStrategy implements AttributeCreationStrategyInterface
         $this->attributeRepository = $attributeRepository;
         $this->attrData = $attrData;
         $this->code = $code;
+    }
+
+    /**
+     * @param EavSetup $eavSetup
+     * @return array
+     */
+    public function getAttributeConfiguration(EavSetup $eavSetup): array
+    {
+        $existingAttribute = $eavSetup->getAttribute(CategorySetup::CATALOG_PRODUCT_ENTITY_TYPE_ID, $this->code);
+
+        if (!$existingAttribute) {
+            return self::$defaultAttrConfig;
+        }
+
+        return $this->getExistingAttributeOptions($existingAttribute);
+    }
+
+    /**
+     * @param array $existingAttribute
+     * @return array
+     */
+    public function getExistingAttributeOptions(array $existingAttribute): array
+    {
+        return [
+            'backend'                    => $existingAttribute['backend_model'],
+            'frontend'                   => $existingAttribute['frontend_model'],
+            'input'                      => $existingAttribute['frontend_input'],
+            'class'                      => $existingAttribute['frontend_class'],
+            'source'                     => $existingAttribute['source_model'],
+            'global'                     => $existingAttribute['is_global'],
+            'visible'                    => $existingAttribute['is_visible'],
+            'required'                   => $existingAttribute['is_required'],
+            'user_defined'               => $existingAttribute['is_user_defined'],
+            'searchable'                 => $existingAttribute['is_searchable'],
+            'filterable'                 => $existingAttribute['is_searchable'],
+            'comparable'                 => $existingAttribute['is_comparable'],
+            'visible_on_front'           => $existingAttribute['is_visible_on_front'],
+            'used_in_product_listing'    => $existingAttribute['used_in_product_listing'],
+            'unique'                     => $existingAttribute['is_unique'],
+            'used_for_promo_rules'       => $existingAttribute['is_used_for_promo_rules'],
+            'is_html_allowed_on_front'   => $existingAttribute['is_html_allowed_on_front'],
+            'used_for_sort_by'           => $existingAttribute['used_for_sort_by'],
+            'is_used_in_grid'            => $existingAttribute['is_used_in_grid'],
+            'is_filterable_in_grid'      => $existingAttribute['is_filterable_in_grid'],
+            'visible_in_advanced_search' => $existingAttribute['is_visible_in_advanced_search']
+        ];
     }
 }
