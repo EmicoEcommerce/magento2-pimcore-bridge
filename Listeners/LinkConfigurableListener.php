@@ -84,7 +84,7 @@ class LinkConfigurableListener implements ObserverInterface
     {
         /** @var Product $product */
         $product = $observer->getProduct();
-        $parentId = $product->getData('parent_id');
+        $parentId = $product->getData('configurable_parent_id');
 
         if (!$parentId) {
             return;

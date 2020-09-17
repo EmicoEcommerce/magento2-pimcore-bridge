@@ -107,6 +107,7 @@ class ProductUpdateTransformator implements ResponseTransformatorInterface
 
             if (isset($data['type']) && $data['type'] === 'variant' && isset($data['parentId'])) {
                 $pimcoreProduct->setData('parent_id', $data['parentId']);
+                $pimcoreProduct->setData('configurable_parent_id', $data['configurableParentId']);
                 $pimcoreProduct->setData('product_type', $data['type']);
             }
 
