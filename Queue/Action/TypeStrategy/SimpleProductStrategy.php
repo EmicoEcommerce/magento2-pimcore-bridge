@@ -71,11 +71,11 @@ class SimpleProductStrategy implements ProductTypeCreationStrategyInterface
             return $product;
         }
 
-        $parentId = $product->getData('parent_id');
+        $parentId = $product->getData('configurable_parent_id');
 
         if (!$parentId) {
             throw new LocalizedException(
-                __('Variant product with ID "%1", do not have assigned parent or parentId is not set.')
+                __('Variant product with ID "%1", do not have assigned parent or parentId is not set.', $parentId)
             );
         }
 
