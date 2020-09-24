@@ -91,6 +91,8 @@ class ProductUpdateTransformator implements ResponseTransformatorInterface
 
             $pimcoreProduct->setData('media_gallery', $this->mergeGalleryWithMediaTypes($pimcoreProduct));
             $pimcoreProduct->setData('pimcore_id', $productId);
+            $pimcoreProduct->setData('key', $data['key']);
+            $pimcoreProduct->setData('has_variants', $data['hasVariants']);
 
             $pimcoreProduct->setData(
                 'attribute_set_id',
@@ -145,6 +147,9 @@ class ProductUpdateTransformator implements ResponseTransformatorInterface
                 continue;
             }
             if (in_array((string) $key, $mediaTypes, true)) {
+                if (is_array($item)) {
+                    $item = reset($item);
+                }
                 $newMediaGallery[$item][] = $key;
             } else {
                 $newMediaGallery[$item] = $newMediaGallery[$item] ?? ['media_gallery'];
