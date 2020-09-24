@@ -21,6 +21,7 @@ use Divante\PimcoreIntegration\Queue\Action\TypeStrategy\TypeStrategyFactory;
 use Divante\PimcoreIntegration\Queue\ActionInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
+use Magento\Catalog\Model\Product\Type as ProductType;
 use Magento\Catalog\Model\ProductFactory;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Exception\LocalizedException;
@@ -166,6 +167,10 @@ class UpdateProductAction implements ActionInterface
         }
 
         $pimcoreProduct = $transformedData[$pimcoreId];
+
+        if ($pimcoreProduct['type_id'] === ProductType::TYPE_SIMPLE && $pimcoreProduct['has_variants']) {
+            return $this->actionResultFactory->create(['result' => ActionResultInterface::SUCCESS]);
+        }
 
         try {
             $product = $this->productRepository->getByPimId($pimcoreId);
