@@ -92,7 +92,7 @@ class ProductUpdateTransformator implements ResponseTransformatorInterface
             $pimcoreProduct->setData('media_gallery', $this->mergeGalleryWithMediaTypes($pimcoreProduct));
             $pimcoreProduct->setData('pimcore_id', $productId);
             $pimcoreProduct->setData('key', $data['key']);
-            $pimcoreProduct->setData('has_variants', $data['hasVariants']);
+            $pimcoreProduct->setData('has_variants', $data['hasVariants'] ?? false);
 
             $pimcoreProduct->setData(
                 'attribute_set_id',
