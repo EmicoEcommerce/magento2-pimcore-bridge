@@ -113,7 +113,7 @@ abstract class  AbstractStrategy implements AttributeCreationStrategyInterface
             'required'                   => $existingAttribute['is_required'],
             'user_defined'               => $existingAttribute['is_user_defined'],
             'searchable'                 => $existingAttribute['is_searchable'],
-            'filterable'                 => $existingAttribute['is_searchable'],
+            'filterable'                 => $existingAttribute['is_filterable'],
             'comparable'                 => $existingAttribute['is_comparable'],
             'visible_on_front'           => $existingAttribute['is_visible_on_front'],
             'used_in_product_listing'    => $existingAttribute['used_in_product_listing'],
