@@ -23,6 +23,7 @@ interface AssetQueueInterface extends QueueInterface
      */
     const ASSET_ID = 'asset_id';
     const ASSET_TYPE = 'asset_type';
+    const ASSET_VALUE = 'asset_value';
     const ASSET_TARGET_ENTITY_ID = 'entity_id';
 
     /**
@@ -48,6 +49,17 @@ interface AssetQueueInterface extends QueueInterface
      * @return AssetQueueInterface
      */
     public function setType(string $type): AssetQueueInterface;
+
+    /**
+     * @return string
+     */
+    public function getValue(): string;
+
+    /**
+     * @param string $value
+     * @return AssetQueueInterface
+     */
+    public function setValue(string $value): AssetQueueInterface;
 
     /**
      * @return int|null

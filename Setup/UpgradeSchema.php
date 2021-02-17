@@ -114,7 +114,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     [
                         'nullable' => true,
                     ],
-                    'Type of asset to import, eg. product, category, etc.'
+                    'Type of asset to import, eg. product, category, video (youtube, vimeo)'
                 )
                 ->addColumn(
                     AssetQueueInterface::CREATED_AT,
