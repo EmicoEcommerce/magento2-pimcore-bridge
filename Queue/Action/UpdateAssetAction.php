@@ -18,6 +18,7 @@ use Divante\PimcoreIntegration\Http\Response\Transformator\ResponseTransformator
 use Divante\PimcoreIntegration\Http\UrlBuilderInterface;
 use Divante\PimcoreIntegration\Queue\Action\Asset\ChecksumValidator;
 use Divante\PimcoreIntegration\Queue\Action\Asset\Strategy\AssetHandlerStrategyFactory;
+use Divante\PimcoreIntegration\Queue\Action\Asset\Strategy\ProductVideo;
 use Divante\PimcoreIntegration\Queue\Action\Asset\TypeMetadataExtractorFactory;
 use Divante\PimcoreIntegration\Queue\Action\Asset\TypeMetadataExtractorInterface;
 use Divante\PimcoreIntegration\Queue\ActionInterface;
@@ -114,8 +115,11 @@ class UpdateAssetAction implements ActionInterface
         $metadataExtractor = $this->metadataExtractorFactory->create(['typeString' => $queue->getType()]);
 
         if ($metadataExtractor->getEntityType() === Product::ENTITY &&
-            in_array(['video_vimeo', 'video_youtube'], $metadataExtractor->getAssetTypes()))
-        {
+            (
+                in_array(ProductVideo::VIDEO_FORMAT_YOUTUBE, $metadataExtractor->getAssetTypes()) ||
+                in_array(ProductVideo::VIDEO_FORMAT_VIMEO, $metadataExtractor->getAssetTypes())
+            )
+        ) {
             return $this
                 ->strategyFactory
                 ->create(AssetHandlerStrategyFactory::PRODUCT_VIDEO_IMPORT)

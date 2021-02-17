@@ -37,6 +37,9 @@ use Magento\Store\Model\StoreManagerInterface;
  */
 class ProductVideo implements AssetHandlerStrategyInterface
 {
+    public const VIDEO_FORMAT_YOUTUBE = 'youtube';
+    public const VIDEO_FORMAT_VIMEO = 'vimeo';
+
     /**
      * @var ProductRepositoryInterface
      */
