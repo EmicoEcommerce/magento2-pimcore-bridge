@@ -315,11 +315,10 @@ class ProductVideo implements AssetHandlerStrategyInterface
         }
 
         $currentMediaGalleryEntries = $product->getMediaGalleryEntries();
-        $currentMediaGalleryEntrieIds = [];
         if (empty($currentMediaGalleryEntries)) {
             $currentMediaGalleryEntries = [$videoEntry];
         } else {
-            foreach ($existingMediaGalleryEntries as $existingMediaGalleryEntry) {
+            foreach ($currentMediaGalleryEntries as $existingMediaGalleryEntry) {
                 $currentMediaGalleryEntrieIds[$existingMediaGalleryEntry->getId()] = $existingMediaGalleryEntry->getId();
             }
             $currentMediaGalleryEntries[] = $videoEntry;

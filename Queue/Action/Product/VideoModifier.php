@@ -103,7 +103,7 @@ class VideoModifier implements DataModifierInterface
                 if ($mediaGalleryEntry->getMediaType() === 'external-video') {
                     $currentVideoUrl = $mediaGalleryEntry->getExtensionAttributes()->getVideoContent()->getVideoUrl();
 
-                    if ($deleteVideo === true) {
+                    if ($deleteVideo) {
                         unset($mediaGalleryEntries[$key]);
                         continue;
                     }
