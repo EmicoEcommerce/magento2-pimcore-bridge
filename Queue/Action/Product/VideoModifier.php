@@ -80,42 +80,60 @@ class VideoModifier implements DataModifierInterface
      */
     public function handle(Product $product, PimcoreProductInterface $pimcoreProduct): array
     {
-        foreach ($product->getMediaGalleryEntries() as $mediaGalleryEntry) {
-            if ($mediaGalleryEntry->getMediaType() === 'external-video') {
-                $currentVideoUrl = $mediaGalleryEntry->getExtensionAttributes()->getVideoContent()->getVideoUrl();
+        $mediaGalleryEntries = $product->getMediaGalleryEntries();
 
-                try {
-                    $newVideoUrl = $this->getCompleteVideoUrl(
-                        $pimcoreProduct->getData('video')['format'],
-                        $pimcoreProduct->getData('video')['link']
-                    );
-                } catch (LocalizedException $exception) {
-                    $this->logger->error('Could not process video element', [$exception]);
-                    continue;
+        $video = $pimcoreProduct->getData('video');
+        $deleteVideo = false;
+        if (empty($video)) {
+            $deleteVideo = true;
+        } else {
+            try {
+                $newVideoUrl = $this->getCompleteVideoUrl(
+                    $pimcoreProduct->getData('video')['format'],
+                    $pimcoreProduct->getData('video')['link']
+                );
+            } catch (LocalizedException $exception) {
+                $this->logger->error('Could not process video element', [$exception]);
+                return [$product, $pimcoreProduct];
+            }
+        }
+
+        if (!empty($mediaGalleryEntries)) {
+            foreach ($mediaGalleryEntries as $key => $mediaGalleryEntry) {
+                if ($mediaGalleryEntry->getMediaType() === 'external-video') {
+                    $currentVideoUrl = $mediaGalleryEntry->getExtensionAttributes()->getVideoContent()->getVideoUrl();
+
+                    if ($deleteVideo === true) {
+                        unset($mediaGalleryEntries[$key]);
+                        continue;
+                    }
+
+                    if ($newVideoUrl === $currentVideoUrl) {
+                        return [$product, $pimcoreProduct];
+                    }
                 }
+            }
+            $product->setMediaGalleryEntries($mediaGalleryEntries);
+        }
 
-                if ($videoUrl === $currentVideoUrl) {
-                    continue;
-                }
+        if ($deleteVideo === false) {
+            $assetQueue = $this->assetQueueFactory->create();
+            /** @var TypeMetadataBuilderInterface $metadataBuilder */
+            $metadataBuilder = $this->metadataBuilderFactory->create([
+                'entityType' => Product::ENTITY,
+                'assetTypes' => ['video' . '_' . $pimcoreProduct->getData('video')['format']],
+            ]);
 
-                $assetQueue = $this->assetQueueFactory->create();
-                /** @var TypeMetadataBuilderInterface $metadataBuilder */
-                $metadataBuilder = $this->metadataBuilderFactory->create([
-                    'entityType' => Product::ENTITY,
-                    'assetTypes' => ['video' . '_' . $pimcoreProduct->getData('video')['format']],
-                ]);
+            $assetQueue->setAction(AbstractImporter::ACTION_INSERT_UPDATE)
+                ->setStoreViewId($product->getStoreId())
+                ->setTargetEntityId($pimcoreProduct->getData('pimcore_id'))
+                ->setType($metadataBuilder->getTypeMetadataString())
+                ->setStatus(QueueStatusInterface::PENDING)
+                ->setValue($newVideoUrl)
+                ->setAssetId(0);
 
-                $assetQueue->setAction(AbstractImporter::ACTION_INSERT_UPDATE)
-                    ->setStoreViewId($product->getStoreId())
-                    ->setTargetEntityId($pimcoreProduct->getData('pimcore_id'))
-                    ->setType($metadataBuilder->getTypeMetadataString())
-                    ->setStatus(QueueStatusInterface::PENDING)
-                    ->setValue($newVideoUrl)
-                    ->setAssetId(0);
-
-                if (!$this->queueImporter->isAlreadyQueued($assetQueue)) {
-                    $this->assetQueueRepository->save($assetQueue);
-                }
+            if (!$this->queueImporter->isAlreadyQueued($assetQueue)) {
+                $this->assetQueueRepository->save($assetQueue);
             }
         }
 
