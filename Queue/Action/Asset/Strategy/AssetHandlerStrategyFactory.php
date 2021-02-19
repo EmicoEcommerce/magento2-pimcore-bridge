@@ -20,6 +20,7 @@ class AssetHandlerStrategyFactory
      * Available strategies
      */
     const PRODUCT_IMAGE_IMPORT = 'product_image';
+    const PRODUCT_VIDEO_IMPORT = 'product_video';
     const CATEGORY_IMAGE_IMPORT = 'category_image';
     const REPLACE_ASSET = 'replace_asset';
 
@@ -54,6 +55,8 @@ class AssetHandlerStrategyFactory
                 return $this->objectManager->create(ReplaceImages::class);
             case self:: CATEGORY_IMAGE_IMPORT:
                 return $this->objectManager->create(CategoryImages::class);
+            case self::PRODUCT_VIDEO_IMPORT:
+                return $this->objectManager->create(ProductVideo::class);
             default:
                 throw new InvalidStrategyException(__('"%1" is not valid strategy.', $strategy));
         }

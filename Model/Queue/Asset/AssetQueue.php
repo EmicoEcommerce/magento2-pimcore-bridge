@@ -99,6 +99,25 @@ class AssetQueue extends AbstractQueue implements AssetQueueInterface
     }
 
     /**
+     * @return string
+     */
+    public function getValue(): string
+    {
+        return $this->getData(self::ASSET_VALUE);
+    }
+
+    /**
+     * @param string $value
+     * @return AssetQueueInterface
+     */
+    public function setValue(string $value): AssetQueueInterface
+    {
+        $this->setData(self::ASSET_VALUE, $value);
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function _construct()

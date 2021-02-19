@@ -18,11 +18,13 @@ use Divante\PimcoreIntegration\Http\Response\Transformator\ResponseTransformator
 use Divante\PimcoreIntegration\Http\UrlBuilderInterface;
 use Divante\PimcoreIntegration\Queue\Action\Asset\ChecksumValidator;
 use Divante\PimcoreIntegration\Queue\Action\Asset\Strategy\AssetHandlerStrategyFactory;
+use Divante\PimcoreIntegration\Queue\Action\Asset\Strategy\ProductVideo;
 use Divante\PimcoreIntegration\Queue\Action\Asset\TypeMetadataExtractorFactory;
 use Divante\PimcoreIntegration\Queue\Action\Asset\TypeMetadataExtractorInterface;
 use Divante\PimcoreIntegration\Queue\ActionInterface;
 use Magento\Catalog\Model\Category;
 use Magento\Catalog\Model\Product;
+use Magento\Framework\DataObjectFactory;
 use Magento\Framework\Exception\LocalizedException;
 
 /**
@@ -61,6 +63,11 @@ class UpdateAssetAction implements ActionInterface
     private $strategyFactory;
 
     /**
+     * @var DataObjectFactory
+     */
+    private $dataObjectFactory;
+
+    /**
      * UpdateAssetAction constructor.
      *
      * @param RequestClientInterface $requestClient
@@ -69,6 +76,7 @@ class UpdateAssetAction implements ActionInterface
      * @param TypeMetadataExtractorFactory $metadataExtractorFactory
      * @param ChecksumValidator $checksumValidator
      * @param AssetHandlerStrategyFactory $strategyFactory
+     * @param DataObjectFactory $dataObjectFactory
      */
     public function __construct(
         RequestClientInterface $requestClient,
@@ -76,7 +84,8 @@ class UpdateAssetAction implements ActionInterface
         ResponseTransformatorInterface $transformator,
         TypeMetadataExtractorFactory $metadataExtractorFactory,
         ChecksumValidator $checksumValidator,
-        AssetHandlerStrategyFactory $strategyFactory
+        AssetHandlerStrategyFactory $strategyFactory,
+        DataObjectFactory $dataObjectFactory
     ) {
         $this->request = $requestClient;
         $this->urlBuilder = $urlBuilder;
@@ -84,6 +93,7 @@ class UpdateAssetAction implements ActionInterface
         $this->metadataExtractorFactory = $metadataExtractorFactory;
         $this->checksumValidator = $checksumValidator;
         $this->strategyFactory = $strategyFactory;
+        $this->dataObjectFactory = $dataObjectFactory;
     }
 
     /**
@@ -99,6 +109,26 @@ class UpdateAssetAction implements ActionInterface
     {
         if (!($queue instanceof AssetQueueInterface)) {
             throw new InvalidQueueTypeException(__('Invalid type, expected %1', AssetQueueInterface::class));
+        }
+
+        /** @var TypeMetadataExtractorInterface $metadataExtractor */
+        $metadataExtractor = $this->metadataExtractorFactory->create(['typeString' => $queue->getType()]);
+
+        if ($metadataExtractor->getEntityType() === Product::ENTITY &&
+            (
+                in_array(ProductVideo::VIDEO_FORMAT_YOUTUBE, $metadataExtractor->getAssetTypes()) ||
+                in_array(ProductVideo::VIDEO_FORMAT_VIMEO, $metadataExtractor->getAssetTypes())
+            )
+        ) {
+            return $this
+                ->strategyFactory
+                ->create(AssetHandlerStrategyFactory::PRODUCT_VIDEO_IMPORT)
+                ->execute(
+                    $this->dataObjectFactory->create([]),
+                    $metadataExtractor,
+                    $queue
+                )
+            ;
         }
 
         $response = $this->prepareRequest($queue)->send();
@@ -119,9 +149,6 @@ class UpdateAssetAction implements ActionInterface
         if (!$this->checksumValidator->isValid($dto->getChecksum(), $dto->getDecodedImage())) {
             throw new InvalidChecksumException(__('Checksum is not valid and image might be broken.'));
         }
-
-        /** @var TypeMetadataExtractorInterface $metadataExtractor */
-        $metadataExtractor = $this->metadataExtractorFactory->create(['typeString' => $queue->getType()]);
 
         if (null !== $queue->getQueueType() && null !== $queue->getTargetEntityId()) {
             if (!$metadataExtractor->isValid()) {

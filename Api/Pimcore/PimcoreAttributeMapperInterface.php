@@ -39,6 +39,11 @@ interface PimcoreAttributeMapperInterface
     const OBJECT = 'object';
 
     /**
+     * Pimcore video type object
+     */
+    const VIDEO = 'video';
+
+    /**
      * Pimcore object type yesno
      */
     const YESNO = 'yesno';

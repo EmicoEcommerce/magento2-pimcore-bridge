@@ -39,6 +39,8 @@ class SimpleAttributeMapper implements PimcoreAttributeMapperInterface
             case self::OBJECT:
             case self::ASSET:
                 return $this->mapObject($attributeData);
+            case self::VIDEO:
+                return $this->mapVideo($attributeData);
             case self::MULTIOBJECT:
                 return $this->mapMultiobject($attributeData);
             default:
@@ -95,6 +97,25 @@ class SimpleAttributeMapper implements PimcoreAttributeMapperInterface
     /**
      * @param array $object
      *
+     * @return array|null
+     *
+     * @throws LocalizedException
+     */
+    private function mapVideo(array $object): ?array
+    {
+        if (!isset($object['type']) && $object['type'] !== 'video') {
+            return null;
+        }
+
+        return [
+            'format' => $object['format'],
+            'link' => $object['link']
+        ];
+    }
+
+    /**
+     * @param array $object
+     *
      * @return mixed
      *
      * @throws LocalizedException
@@ -140,3 +161,4 @@ class SimpleAttributeMapper implements PimcoreAttributeMapperInterface
         return $mappedResult;
     }
 }
+

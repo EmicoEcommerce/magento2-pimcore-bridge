@@ -23,6 +23,7 @@ The second part of this module (Magento 2 - Pimcore Integration Module) is avail
 		- [Attributes Integration](#f2)
 		- [Categories Integration](#f3)
 		- [Assets Integration](#f4)
+		  - [Video elements such as youtube/vimeo](#f4.1)
 		- [Stores Integration](#f5)
 		- [Dynamic creation of attribute sets](#f6)
 		- [Translations](#f7)
@@ -73,6 +74,9 @@ Import of categories from Pimcore, perhaps structured in a tree.
 
 #### <a name="f4"></a>Assets integration
 Keep your media gallery in Pimcore, assign them to a category or product, and publish.
+
+#### <a name="f4.1"></a>Video elements
+Add video elements such as youtube links or vimeo in Pimcore and publish to Magento
 
 #### <a name="f5"></a>Dynamic creation of attribute sets
 The module detects if attributes on a product belong to an existing attribute set and possibly create a new one.

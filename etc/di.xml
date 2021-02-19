@@ -39,7 +39,17 @@
             <argument name="queueImporter" xsi:type="object">Divante\PimcoreIntegration\Queue\Importer\AssetQueueImporter</argument>
         </arguments>
     </type>
+    <type name="Divante\PimcoreIntegration\Queue\Action\Product\VideoModifier">
+        <arguments>
+            <argument name="queueImporter" xsi:type="object">Divante\PimcoreIntegration\Queue\Importer\AssetQueueImporter</argument>
+        </arguments>
+    </type>
     <type name="Divante\PimcoreIntegration\Queue\Action\Asset\Strategy\ProductImage">
+        <arguments>
+            <argument name="queueImporter" xsi:type="object">Divante\PimcoreIntegration\Queue\Importer\ProductQueueImporter</argument>
+        </arguments>
+    </type>
+    <type name="Divante\PimcoreIntegration\Queue\Action\Asset\Strategy\ProductVideo">
         <arguments>
             <argument name="queueImporter" xsi:type="object">Divante\PimcoreIntegration\Queue\Importer\ProductQueueImporter</argument>
         </arguments>
@@ -119,6 +129,7 @@
                 <item name="eav_attribute_option_modifier" xsi:type="object">Divante\PimcoreIntegration\Queue\Action\Product\EavAttributeOptionModifier</item>
                 <item name="category_ids_modifier" xsi:type="object">Divante\PimcoreIntegration\Queue\Action\Product\CategoryIdsModifier</item>
                 <item name="media_gallery_modifier" xsi:type="object">Divante\PimcoreIntegration\Queue\Action\Product\MediaGalleryDataModifier</item>
+                <item name="video_modifier" xsi:type="object">Divante\PimcoreIntegration\Queue\Action\Product\VideoModifier</item>
             </argument>
         </arguments>
     </type>
