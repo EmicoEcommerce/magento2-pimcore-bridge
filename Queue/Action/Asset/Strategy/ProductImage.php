@@ -197,8 +197,13 @@ class ProductImage implements AssetHandlerStrategyInterface
             ->setContent($content)
             ->setFile($tmpPath)
             ->setMediaType('image')
-            ->setDisabled(false)
-            ->setTypes($metadataExtractor->getAssetTypes());
+            ->setDisabled(false);
+
+        $mediaTypes = $metadataExtractor->getAssetTypes();
+        $entry->setTypes($mediaTypes);
+        if (in_array('image', $mediaTypes)) {
+            $entry->setPosition(0);
+        }
 
         $oldImgId = $this->resolveOldImageId($product);
         if (null === $oldImgId) {
