@@ -55,96 +55,105 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
         $setup->getConnection()->createTable(
             $setup->getConnection()
-                ->newTable($setup->getTable(AssetQueueInterface::SCHEMA_NAME))
-                ->addColumn(
-                    AssetQueueInterface::TRANSACTION_ID,
-                    Table::TYPE_INTEGER,
-                    11,
-                    [
-                        'identity' => true,
-                        'nullable' => false,
-                        'primary'  => true,
-                        'unsigned' => true,
-                    ],
-                    'Transaction ID'
-                )
-                ->addColumn(
-                    AssetQueueInterface::ASSET_ID,
-                    Table::TYPE_INTEGER,
-                    11,
-                    [
-                        'nullable' => false,
-                        'unsigned' => true,
-                    ],
-                    'Pimcore Asset ID'
-                )
-                ->addColumn(
-                    AssetQueueInterface::STORE_VIEW_ID,
-                    Table::TYPE_INTEGER,
-                    11,
-                    [
-                        'nullable' => false,
-                        'unsigned' => true,
-                    ],
-                    'Magento store_view id for published asset'
-                )
-                ->addColumn(
-                    AssetQueueInterface::STATUS,
-                    Table::TYPE_INTEGER,
-                    1,
-                    [
-                        'nullable' => false,
-                        'unsigned' => true,
-                    ],
-                    'Status of import processing'
-                )
-                ->addColumn(
-                    AssetQueueInterface::ACTION,
-                    Table::TYPE_TEXT,
-                    30,
-                    [
-                        'nullable' => false,
-                    ],
-                    'Status of import processing'
-                )
-                ->addColumn(
-                    AssetQueueInterface::ASSET_TYPE,
-                    Table::TYPE_TEXT,
-                    100,
-                    [
-                        'nullable' => true,
-                    ],
-                    'Type of asset to import, eg. product, category, video (youtube, vimeo)'
-                )
-                ->addColumn(
-                    AssetQueueInterface::CREATED_AT,
-                    Table::TYPE_TIMESTAMP,
-                    null,
-                    [
-                        'nullable' => false,
-                        'default'  => Table::TIMESTAMP_INIT,
-                    ],
-                    'Date of published asset'
-                )
-                ->addColumn(
-                    AssetQueueInterface::UPDATED_AT,
-                    Table::TYPE_TIMESTAMP,
-                    null,
-                    [
-                        'nullable' => false,
-                        'default'  => Table::TIMESTAMP_INIT_UPDATE,
-                    ],
-                    'Date of last queue update'
-                )
-                ->addColumn(
-                    AssetQueueInterface::FINISHED_AT,
-                    Table::TYPE_TIMESTAMP,
-                    null,
-                    [
-                        'nullable' => true,
-                    ],
-                    'Date when import was finished'
-                )->setComment('Pim asset queue table')
+                  ->newTable($setup->getTable(AssetQueueInterface::SCHEMA_NAME))
+                  ->addColumn(
+                      AssetQueueInterface::TRANSACTION_ID,
+                      Table::TYPE_INTEGER,
+                      11,
+                      [
+                          'identity' => true,
+                          'nullable' => false,
+                          'primary'  => true,
+                          'unsigned' => true,
+                      ],
+                      'Transaction ID'
+                  )
+                  ->addColumn(
+                      AssetQueueInterface::ASSET_ID,
+                      Table::TYPE_INTEGER,
+                      11,
+                      [
+                          'nullable' => false,
+                          'unsigned' => true,
+                      ],
+                      'Pimcore Asset ID'
+                  )
+                  ->addColumn(
+                      AssetQueueInterface::STORE_VIEW_ID,
+                      Table::TYPE_INTEGER,
+                      11,
+                      [
+                          'nullable' => false,
+                          'unsigned' => true,
+                      ],
+                      'Magento store_view id for published asset'
+                  )
+                  ->addColumn(
+                      AssetQueueInterface::STATUS,
+                      Table::TYPE_INTEGER,
+                      1,
+                      [
+                          'nullable' => false,
+                          'unsigned' => true,
+                      ],
+                      'Status of import processing'
+                  )
+                  ->addColumn(
+                      AssetQueueInterface::ACTION,
+                      Table::TYPE_TEXT,
+                      30,
+                      [
+                          'nullable' => false,
+                      ],
+                      'Status of import processing'
+                  )
+                  ->addColumn(
+                      AssetQueueInterface::ASSET_TYPE,
+                      Table::TYPE_TEXT,
+                      100,
+                      [
+                          'nullable' => true,
+                      ],
+                      'Type of asset to import, eg. product, category, video (youtube, vimeo)'
+                  )
+                  ->addColumn(
+                      AssetQueueInterface::CREATED_AT,
+                      Table::TYPE_TIMESTAMP,
+                      null,
+                      [
+                          'nullable' => false,
+                          'default'  => Table::TIMESTAMP_INIT,
+                      ],
+                      'Date of published asset'
+                  )
+                  ->addColumn(
+                      AssetQueueInterface::UPDATED_AT,
+                      Table::TYPE_TIMESTAMP,
+                      null,
+                      [
+                          'nullable' => false,
+                          'default'  => Table::TIMESTAMP_INIT_UPDATE,
+                      ],
+                      'Date of last queue update'
+                  )
+                  ->addColumn(
+                      AssetQueueInterface::FINISHED_AT,
+                      Table::TYPE_TIMESTAMP,
+                      null,
+                      [
+                          'nullable' => true,
+                      ],
+                      'Date when import was finished'
+                  )
+                  ->addColumn(
+                      AssetQueueInterface::ASSET_VALUE,
+                      Table::TYPE_TEXT,
+                      null,
+                      [
+                          'nullable' => true,
+                      ],
+                      'Contains the asset value if element is video for instance'
+                  )->setComment('Pim asset queue table')
         );
     }
 
