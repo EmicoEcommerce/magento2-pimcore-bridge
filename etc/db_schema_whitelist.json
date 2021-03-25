@@ -1,0 +1,17 @@
+{
+    "divante_pimcore_asset_queue": {
+        "column": {
+            "transaction_id": true,
+            "asset_id":  true,
+            "store_view_id": true,
+            "status":  true,
+            "action": true,
+            "asset_type":  true,
+            "entity_id": true,
+            "created_at":  true,
+            "updated_at": true,
+            "finished_at":  true,
+            "asset_value": true
+        }
+    }
+}
